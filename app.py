@@ -14,13 +14,10 @@ messages = st.session_state.setdefault("messages", [])
 for m in messages:
     st.chat_message(m["role"]).write(m["content"])
 
-if prompt := st.chat_input("Message"):
+if prompt := st.chat_input():
     messages.append({"role": "user", "content": prompt})
-    st.chat_message("user").write(prompt)
-
     answer = model().create_chat_completion(
         messages=messages[-6:]
     )["choices"][0]["message"]["content"]
-
-    st.chat_message("assistant").write(answer)
     messages.append({"role": "assistant", "content": answer})
+    st.rerun()
